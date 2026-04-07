@@ -30,8 +30,3 @@ It is designed to demonstrate:
 - [`us-air-network-robustness`](us-air-network-robustness/README.md)
 - [`state-level-flight-flow-network`](state-level-flight-flow-network/README.md)
 
-## Suggested Resume Summary
-
-**Air Transport Network Centrality and Robustness Analysis**  
-Modeled airport traffic as a weighted directed graph, compared multiple centrality metrics, and performed node-removal stress tests to identify high-impact hubs and resilience bottlenecks.
-
