@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Which Airports Hold the Network Together? | Andrey Zhuravlev</title>
+<meta name="description" content="The US airport network as a weighted directed graph: centrality, robustness to closing hubs, and the state-to-state flight network.">
+<meta property="og:title" content="Which airports hold the US network together?">
+<meta property="og:description" content="464 airports, 12,000 connections, six centrality measures and one airport that only O'Hare can reach. A graph mining project by Andrey Zhuravlev.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Crect width=%2264%22 height=%2264%22 rx=%2210%22 fill=%22%23111418%22/%3E%3Cpath d=%22M12 38l40-16-6 20-10-4-6 8-2-10z%22 fill=%22%23FFD400%22/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=B612:ital,wght@0,400;0,700;1,400&family=B612+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="top">
+  <span class="top-left"><span class="beacon" aria-hidden="true"></span>ANDREY ZHURAVLEV<span class="extra">&nbsp;· GRAPH MINING</span></span>
+  <span class="top-right"><span id="clock">--:--</span> LOCAL</span>
+</header>
+
+<section class="hero">
+  <p class="hero-kicker">DEPARTURES · US AIR TRANSPORT NETWORK</p>
+  <h1 class="flapboard" aria-label="Which airports hold the network together?">
+    <span class="flap-line" data-text="WHICH AIRPORTS"></span>
+    <span class="flap-line" data-text="HOLD THE NETWORK"></span>
+    <span class="flap-line" data-text="TOGETHER?"></span>
+  </h1>
+  <p class="hero-sub">I treated the US airport network as a weighted, directed graph, with 464 airports as nodes and passenger volumes on every route as edge weights, and asked three questions: which airports matter most, how much it takes to break the network apart, and what it looks like state by state.</p>
+
+  <a class="pass" href="https://github.com/azhuravlev1/air-transport-network-analytics" target="_blank" rel="noopener" aria-label="View the code on GitHub">
+    <div class="pass-main">
+      <div class="pass-head"><span>BOARDING PASS</span><span>CODE ON GITHUB</span></div>
+      <div class="pass-route">
+        <div><small>FROM</small><b>HERE</b></div>
+        <div class="pass-plane" aria-hidden="true">✈</div>
+        <div><small>TO</small><b>GITHUB</b></div>
+      </div>
+      <div class="pass-fields">
+        <div><small>PASSENGER</small><span>YOU</span></div>
+        <div><small>FLIGHT</small><span>AZ 0001</span></div>
+        <div class="wide"><small>GATE</small><span>azhuravlev1/air-transport-network-analytics</span></div>
+      </div>
+    </div>
+    <div class="pass-stub">
+      <small>BOARDING</small>
+      <b>NOW</b>
+      <div class="barcode" aria-hidden="true"></div>
+      <span class="pass-cta">View the code →</span>
+    </div>
+  </a>
+  <p class="hero-note">Everything runs in one notebook: <a href="https://github.com/azhuravlev1/air-transport-network-analytics/blob/main/analysis.ipynb" target="_blank" rel="noopener">analysis.ipynb</a> (Python, pandas, igraph).</p>
+</section>
+
+<main>
+
+<!-- ============ NETWORK ============ -->
+<section class="panel" id="network">
+  <div class="panel-head"><span class="gate">GATE 1</span><h2>The network</h2></div>
+  <div class="stats">
+    <div class="stat"><span class="stat-num">464</span><span class="stat-lbl">AIRPORTS</span></div>
+    <div class="stat"><span class="stat-num">12,000</span><span class="stat-lbl">DIRECTED ROUTES</span></div>
+    <div class="stat"><span class="stat-num">555M</span><span class="stat-lbl">PASSENGERS IN THE DATA</span></div>
+  </div>
+  <figure class="map-fig">
+    <div id="map" class="map" role="img" aria-label="Map of US airports and the 900 busiest routes, with Atlanta, Chicago O'Hare, Dallas Fort Worth and Los Angeles as the largest hubs"></div>
+    <figcaption>FIG. 1 · The 900 busiest routes between airports in the contiguous United States (450 of the 464 airports). Line opacity follows passenger volume; dot size follows each airport's total passengers.</figcaption>
+  </figure>
+  <p>Every edge points from an origin to a destination and carries the number of passengers on that route. Atlanta handles the most passengers by far, about 71 million arriving and departing in this data, followed by Chicago O'Hare, Dallas Fort Worth, Los Angeles and Las Vegas.</p>
+</section>
+
+<!-- ============ CENTRALITY ============ -->
+<section class="panel" id="centrality">
+  <div class="panel-head"><span class="gate">GATE 2</span><h2>Who matters most?</h2></div>
+  <p class="lead">"Important" depends on what you measure, so I ranked every airport six ways: weighted degree, PageRank, authority and hub scores, betweenness and harmonic centrality.</p>
+  <div class="board" role="table" aria-label="Top five airports by four centrality measures">
+    <div class="board-row board-headrow" role="row">
+      <span role="columnheader">RANK</span><span role="columnheader">DEGREE</span><span role="columnheader">PAGERANK</span><span role="columnheader">BETWEENNESS</span><span role="columnheader">HARMONIC</span>
+    </div>
+    <div class="board-row" role="row"><span>1</span><span class="flapcell" data-v="ATL"></span><span class="flapcell" data-v="ATL"></span><span class="flapcell hl" data-v="MSP"></span><span class="flapcell hl2" data-v="ORD"></span></div>
+    <div class="board-row" role="row"><span>2</span><span class="flapcell" data-v="ORD"></span><span class="flapcell" data-v="ORD"></span><span class="flapcell" data-v="LAS"></span><span class="flapcell" data-v="ATL"></span></div>
+    <div class="board-row" role="row"><span>3</span><span class="flapcell" data-v="DFW"></span><span class="flapcell" data-v="DFW"></span><span class="flapcell" data-v="SLC"></span><span class="flapcell" data-v="MSP"></span></div>
+    <div class="board-row" role="row"><span>4</span><span class="flapcell" data-v="LAX"></span><span class="flapcell" data-v="LAX"></span><span class="flapcell" data-v="PHX"></span><span class="flapcell" data-v="IAD"></span></div>
+    <div class="board-row" role="row"><span>5</span><span class="flapcell" data-v="LAS"></span><span class="flapcell" data-v="LAS"></span><span class="flapcell" data-v="ATL"></span><span class="flapcell" data-v="LAS"></span></div>
+  </div>
+  <p class="board-cap">FIG. 2 · Top five airports by four of the six measures. Authority and hub scores give the same top five as degree and PageRank, in a slightly different order.</p>
+  <div class="insights">
+    <div><h3>Traffic measures agree</h3><p>Degree, PageRank, authority and hub all pick the same five airports: Atlanta, O'Hare, Dallas Fort Worth, Los Angeles and Las Vegas. They mostly measure how much traffic flows through an airport.</p></div>
+    <div><h3 class="yellow">Minneapolis is the connector</h3><p>Minneapolis is not in the top five for traffic, but it has the highest betweenness: more shortest paths between other airports pass through it than through any other airport.</p></div>
+    <div><h3 class="blue">O'Hare is closest to everything</h3><p>Ranked by harmonic centrality, which rewards being a few hops from every other airport, Chicago O'Hare comes first.</p></div>
+  </div>
+</section>
+
+<!-- ============ ROBUSTNESS ============ -->
+<section class="panel" id="robustness">
+  <div class="panel-head"><span class="gate">GATE 3</span><h2>Close an airport</h2></div>
+  <p class="lead">How many airports do you have to close before some part of the network can no longer be reached? I removed airports one at a time, most central first, until the network split. Pick a ranking to replay it.</p>
+  <div class="closures" role="group" aria-label="Choose a ranking">
+    <button type="button" class="closure-btn" data-scenario="harmonic" aria-pressed="false">Harmonic · <b>1</b> closure</button>
+    <button type="button" class="closure-btn" data-scenario="degree" aria-pressed="false">Degree / PageRank / HITS · <b>2</b></button>
+    <button type="button" class="closure-btn" data-scenario="between" aria-pressed="false">Betweenness · <b>4</b></button>
+    <button type="button" class="closure-btn reset" data-scenario="reset">Reopen all</button>
+  </div>
+  <div class="robust-wrap">
+    <div id="robustMap" class="map small" role="img" aria-label="Map showing which airports are closed and which airport is cut off"></div>
+    <div class="robust-board" id="robustBoard" aria-live="polite">
+      <div class="rb-line">SELECT A RANKING</div>
+      <div class="rb-sub">Closed airports turn red. An airport that loses its last connection flashes.</div>
+    </div>
+  </div>
+  <p>The network turns out to be fragile in a very specific way. It is not that the country falls apart: it is that a few small airports have only one route. Carbondale, Illinois flies only to O'Hare, about 120 passengers each way, so closing O'Hare alone cuts it off. Brown Field in San Diego links only to Phoenix, which is why betweenness needs four closures.</p>
+  <div class="mini-board">
+    <div class="mb-title">CLOSING THE LEAST CENTRAL AIRPORTS FIRST · CLOSURES BEFORE THE NETWORK SPLITS</div>
+    <div class="mb-grid">
+      <div><span>AUTHORITY</span><b>23</b></div>
+      <div><span>PAGERANK</span><b>36</b></div>
+      <div><span>DEGREE</span><b>179</b></div>
+      <div><span>HUB</span><b>ALL</b></div>
+      <div><span>BETWEENNESS</span><b>ALL</b></div>
+      <div><span>HARMONIC</span><b>ALL</b></div>
+    </div>
+  </div>
+  <p>Run in the other direction, the experiment tests how well each measure finds the airports that do not matter. Hub, betweenness and harmonic rankings keep the network connected until the very last airport, so they are the best at spotting truly peripheral nodes. PageRank and authority do poorly at this: closing their lowest-ranked airports splits the network after only 36 and 23 closures.</p>
+</section>
+
+<!-- ============ NEW YORK ============ -->
+<section class="panel" id="newyork">
+  <div class="panel-head"><span class="gate">GATE 4</span><h2>Zoom in: New York State</h2></div>
+  <p class="lead">Inside the New York subnetwork, JFK leads on weighted degree, PageRank, authority and betweenness. Buffalo is the strongest hub.</p>
+  <div class="board ny" role="table" aria-label="New York airports by centrality">
+    <div class="board-row board-headrow" role="row"><span role="columnheader">AIRPORT</span><span role="columnheader">DEGREE</span><span role="columnheader">PAGERANK</span><span role="columnheader">HUB</span><span role="columnheader">BETWEEN.</span></div>
+    <div class="board-row" role="row"><span class="flapcell" data-v="JFK"></span><span>0.173</span><span>0.343</span><span>0.374</span><span>0.648</span></div>
+    <div class="board-row" role="row"><span class="flapcell" data-v="BUF"></span><span>0.102</span><span>0.196</span><span class="y">1.000</span><span>0.168</span></div>
+    <div class="board-row" role="row"><span class="flapcell" data-v="ROC"></span><span>0.055</span><span>0.109</span><span>0.547</span><span>0.000</span></div>
+    <div class="board-row" role="row"><span class="flapcell" data-v="SYR"></span><span>0.045</span><span>0.097</span><span>0.459</span><span>0.244</span></div>
+    <div class="board-row" role="row"><span class="flapcell" data-v="LGA"></span><span>0.040</span><span>0.108</span><span>0.079</span><span>0.287</span></div>
+  </div>
+  <p class="board-cap">FIG. 3 · The five New York airports with the highest weighted degree, with normalized centrality scores (loops and isolated airports removed).</p>
+</section>
+
+<!-- ============ STATES ============ -->
+<section class="panel" id="states">
+  <div class="panel-head"><span class="gate">GATE 5</span><h2>State to state</h2></div>
+  <p class="lead">Merging every airport into its state, and adding up parallel routes, gives a compact network of interstate travel. It is strongly connected: every state can reach every other.</p>
+  <div class="pairs" id="pairs"></div>
+  <p class="board-cap">FIG. 4 · The ten busiest state-to-state directions by passengers.</p>
+  <p>The single busiest direction is Florida to Georgia, with 6,584,065 passengers, closely followed by Georgia to Florida, which says a lot about Atlanta's role as a connecting hub for Florida travel. California, Florida, Texas, Georgia and Illinois lead in both incoming and outgoing passengers, and because the state network is so tightly connected, every state scores close to 1 on harmonic centrality.</p>
+</section>
+
+<!-- ============ SYNTHETIC ============ -->
+<section class="panel" id="synthetic">
+  <div class="panel-head"><span class="gate">GATE 6</span><h2>Before the real data</h2></div>
+  <p>To understand how the measures behave, I first generated a synthetic network of 10,000 nodes with a power-law degree distribution (a Chung-Lu graph) and compared each centrality measure against node degree. Degree centrality and PageRank grow almost linearly with degree, hub and authority scores climb towards 1 but get noisier for high-degree nodes, and harmonic centrality rises quickly before levelling off around 0.26 to 0.3.</p>
+  <figure class="light-fig">
+    <img src="assets/img/chung-lu-centrality.png" alt="Six scatter plots of average centrality against degree on a synthetic Chung-Lu graph" loading="lazy">
+    <figcaption>FIG. 5 · Average value of each centrality measure by node degree on a synthetic Chung-Lu graph (n = 10,000, power-law exponent 2.5).</figcaption>
+  </figure>
+</section>
+
+<section class="arrivals">
+  <p class="arr-title">ARRIVED</p>
+  <p>The full analysis, from loading the graph to every experiment on this page, is in one notebook.</p>
+  <div class="arr-buttons">
+    <a class="btn btn-yellow" href="https://github.com/azhuravlev1/air-transport-network-analytics" target="_blank" rel="noopener">View the code on GitHub</a>
+    <a class="btn btn-line" href="https://github.com/azhuravlev1/air-transport-network-analytics/blob/main/analysis.ipynb" target="_blank" rel="noopener">Open the notebook</a>
+  </div>
+  <p class="fine">Assignment for DS8014 Graph Mining, Toronto Metropolitan University. Route and airport data provided with the course.</p>
+</section>
+
+</main>
+
+<footer class="footer">ANDREY ZHURAVLEV · <a href="https://github.com/azhuravlev1" target="_blank" rel="noopener">GITHUB.COM/AZHURAVLEV1</a> · <a href="https://linkedin.com/in/andrey-zh" target="_blank" rel="noopener">LINKEDIN.COM/IN/ANDREY-ZH</a></footer>
+
+<script type="module" src="assets/js/main.js"></script>
+</body>
+</html>
